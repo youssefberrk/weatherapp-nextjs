@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 const CitySchema = z.string().min(1, 'City name cannot be empty').regex(/^[a-zA-Z\s]+$/,'City name must contain only letters' ).trim();
 
@@ -19,7 +19,7 @@ export default function SearchBar() {
       setError('');
       router.push(`/weather/${encodeURIComponent(city)}`);
     } catch (err: unknown) {
-      setError(err ? err.issues[0].message : 'An error occurred');
+      setError(err instanceof ZodError ? err.issues[0].message : 'An error occurred');
     }
 
   };
